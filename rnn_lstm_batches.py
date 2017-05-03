@@ -28,7 +28,7 @@ n_classes = 4 # gesture recognition total classes (1-4 classes)
 x = tf.placeholder("float", [None, n_steps, n_input])
 y = tf.placeholder("float", [None, n_classes])
 
-# Define weights
+# Define weights & biases
 weights = {
     'out': tf.Variable(tf.random_normal([n_hidden, n_classes]))
 }

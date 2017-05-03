@@ -144,7 +144,7 @@ with tf.Session() as sess:
                     
                 print("##################################################")
                     
-                print("The accuracy for testing per 4 iterations of each training sample is --  " +  "{:.5f}".format(a))      
+                #print("The accuracy for testing per 4 iterations of each training sample is --  " +  "{:.5f}".format(a))      
                 
                 step += 1
                 

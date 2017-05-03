@@ -111,7 +111,7 @@ with tf.Session() as sess:
             counter=counter+1
             step = 1
             # Keep training until reach max iterations
-            while step < 3:
+            while step < 2:
                 batch_x = np.array(data)
                 #print (batch_x.shape)
                 if(i==1):

@@ -13,7 +13,7 @@ import tensorflow as tf
 from tensorflow.contrib import rnn
 
 # Parameters
-learning_rate = 0.001
+learning_rate = 0.0001
 training_iters = 80
 batch_size = 1
 display_step = 4
@@ -97,8 +97,9 @@ with tf.Session() as sess:
     
     for i in range(1,5):
         counter=1
+        batch_counter=1
         
-        while(counter!=21):
+        while((counter!=21) and ()):
         
             f=path+'l'+str(i)+'_'+str(counter)+'.txt'
             with open(f) as f:
@@ -129,21 +130,21 @@ with tf.Session() as sess:
         
                 sess.run(optimizer, feed_dict={x: batch_x, y: batch_y})
                 
-                if step % 4 == 0:
+                #if (step != 0):
                     # Calculate batch accuracy
-                    acc = sess.run(accuracy, feed_dict={x: batch_x, y: batch_y})
+                acc = sess.run(accuracy, feed_dict={x: batch_x, y: batch_y})
                 
                     # Calculate batch loss
-                    loss = sess.run(cost, feed_dict={x: batch_x, y: batch_y})
-                    print("Iter " + str(step*batch_size) + ", Minibatch Loss= " + \
-                          "{:.6f}".format(loss) + ", Training Accuracy= " + \
-                          "{:.5f}".format(acc))
+                loss = sess.run(cost, feed_dict={x: batch_x, y: batch_y})
+                print("Iter " + str(step*batch_size) + ", Minibatch Loss= " + \
+                      "{:.6f}".format(loss) + ", Training Accuracy= " + \
+                      "{:.5f}".format(acc))
                     
-                    a = sess.run(accuracy, feed_dict={x: train_test_x, y: train_test_y})
+                a = sess.run(accuracy, feed_dict={x: train_test_x, y: train_test_y})
                     
-                    print("##################################################")
+                print("##################################################")
                     
-                    print("The accuracy for testing per 4 iterations of each training sample is --  " +  "{:.5f}".format(a))      
+                print("The accuracy for testing per 4 iterations of each training sample is --  " +  "{:.5f}".format(a))      
                 
                 step += 1
                 

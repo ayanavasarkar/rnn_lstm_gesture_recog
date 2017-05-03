@@ -15,7 +15,7 @@ from tensorflow.contrib import rnn
 # Parameters
 learning_rate = 0.0001
 training_iters = 80
-batch_size = 1
+batch_size = 2
 display_step = 4
 
 # Network Parameters
@@ -74,6 +74,7 @@ init = tf.global_variables_initializer()
 start=time.time()
 
 data=[]
+label_y=[]
 counter=1
 acc_test=[]
 
@@ -86,10 +87,10 @@ with open(path_t) as f_ile:
         acc_test.append(s[0:625])
         
 train_test_x = np.array(acc_test)
-train_test_x = train_test_x.reshape((batch_size, n_steps, n_input))
+#train_test_x = train_test_x.reshape((batch_size, n_steps, n_input))
 train_y = [1,0,0,0]
 train_test_y = np.array(train_y)
-train_test_y = train_test_y.reshape((batch_size,n_classes))
+#train_test_y = train_test_y.reshape((batch_size,n_classes))
 
 
 with tf.Session() as sess:
@@ -97,50 +98,54 @@ with tf.Session() as sess:
     
     for i in range(1,5):
         counter=1
-        batch_counter=1
+        batch_counter=0
         
-        while((counter!=21) and ()):
-        
-            f=path+'l'+str(i)+'_'+str(counter)+'.txt'
-            with open(f) as f:
-        
-                for line in f:
-                    st=line.split(" ")
-                    data.append(st[0:625])
-                #print len(st)
-                #print counter
-            counter=counter+1
+        while((counter<21)):
+            batch_counter=0
+            while((batch_counter<batch_size) and (counter<21)):
+                f=path+'l'+str(i)+'_'+str(counter)+'.txt'
+                print (f)
+                with open(f) as f:
+                    
+                    
+                    for line in f:
+                        st=line.split(" ")
+                        data.append(st[0:625])
+               
+                    if(i==1):
+                        label_y.append([1,0,0,0])
+                    elif(i==2):
+                        label_y.append([0,1,0,0])
+                    elif(i==3):
+                        label_y.append([0,0,1,0])
+                    elif(i==4):
+                        label_y.append([0,0,0,1])
+                 
+                counter=counter+1
+                batch_counter+=1
             step = 1
             # Keep training until reach max iterations
             while step < 2:
                 batch_x = np.array(data)
-                #print (batch_x.shape)
-                if(i==1):
-                    y1=[1,0,0,0]
-                elif(i==2):
-                    y1=[0,1,0,0]
-                elif(i==3):
-                    y1=[0,0,1,0]
-                elif(i==4):
-                    y1=[0,0,0,1]
-                batch_y = np.array(y1)
+                print ("batch size--",batch_x.shape)
+                
+                batch_y = np.array(label_y)
                 batch_x = batch_x.reshape((batch_size, n_steps, n_input))
                 batch_y = batch_y.reshape((batch_size,n_classes))
                 #print (batch_y.shape)
         
                 sess.run(optimizer, feed_dict={x: batch_x, y: batch_y})
                 
-                #if (step != 0):
                     # Calculate batch accuracy
                 acc = sess.run(accuracy, feed_dict={x: batch_x, y: batch_y})
                 
                     # Calculate batch loss
                 loss = sess.run(cost, feed_dict={x: batch_x, y: batch_y})
-                print("Iter " + str(step*batch_size) + ", Minibatch Loss= " + \
+                print("Iter " + str(step) + ", Minibatch Loss= " + \
                       "{:.6f}".format(loss) + ", Training Accuracy= " + \
                       "{:.5f}".format(acc))
                     
-                a = sess.run(accuracy, feed_dict={x: train_test_x, y: train_test_y})
+                #a = sess.run(accuracy, feed_dict={x: train_test_x, y: train_test_y})
                     
                 print("##################################################")
                     
@@ -151,4 +156,5 @@ with tf.Session() as sess:
             print("Optimization Finished!", i)
 
             del data[:]
+            del label_y[:]
 print (time.time()-start)

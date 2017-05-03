@@ -113,7 +113,7 @@ with tf.Session() as sess:
             # Keep training until reach max iterations
             while step < 2:
                 batch_x = np.array(data)
-                #print (batch_x.shape)
+                print (batch_x.shape)
                 if(i==1):
                     y1=[1,0,0,0]
                 elif(i==2):

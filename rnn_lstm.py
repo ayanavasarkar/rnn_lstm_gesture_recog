@@ -111,7 +111,7 @@ with tf.Session() as sess:
             counter=counter+1
             step = 1
             # Keep training until reach max iterations
-            while step < 2:
+            while step < 3:
                 batch_x = np.array(data)
                 #print (batch_x.shape)
                 if(i==1):
@@ -129,21 +129,21 @@ with tf.Session() as sess:
         
                 sess.run(optimizer, feed_dict={x: batch_x, y: batch_y})
                 
-                if step % 4 == 0:
+                #if step % 4 == 0:
                     # Calculate batch accuracy
-                    acc = sess.run(accuracy, feed_dict={x: batch_x, y: batch_y})
+                acc = sess.run(accuracy, feed_dict={x: batch_x, y: batch_y})
                 
                     # Calculate batch loss
-                    loss = sess.run(cost, feed_dict={x: batch_x, y: batch_y})
-                    print("Iter " + str(step*batch_size) + ", Minibatch Loss= " + \
-                          "{:.6f}".format(loss) + ", Training Accuracy= " + \
-                          "{:.5f}".format(acc))
+                loss = sess.run(cost, feed_dict={x: batch_x, y: batch_y})
+                print("Iter " + str(step*batch_size) + ", Minibatch Loss= " + \
+                      "{:.6f}".format(loss) + ", Training Accuracy= " + \
+                      "{:.5f}".format(acc))
                     
-                    a = sess.run(accuracy, feed_dict={x: train_test_x, y: train_test_y})
+                a = sess.run(accuracy, feed_dict={x: train_test_x, y: train_test_y})
                     
-                    print("##################################################")
+                print("##################################################")
                     
-                    print("The accuracy for testing per 4 iterations of each training sample is --  " +  "{:.5f}".format(a))      
+                print("The accuracy for testing per 4 iterations of each training sample is --  " +  "{:.5f}".format(a))      
                 
                 step += 1
                 

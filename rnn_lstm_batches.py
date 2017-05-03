@@ -107,7 +107,8 @@ with tf.Session() as sess:
                 print (f)
                 with open(f) as f:
                     
-                    
+                    #Taking each lineof 625 values and appending it to the list...Thus 40 frames in total
+                    #40 lines of 625 values in each line
                     for line in f:
                         st=line.split(" ")
                         data.append(st[0:625])
@@ -124,7 +125,7 @@ with tf.Session() as sess:
                 counter=counter+1
                 batch_counter+=1
             step = 1
-            # Keep training until reach max iterations
+            # Keep training until reach max iterations for the batches
             while step < 2:
                 batch_x = np.array(data)
                 print ("batch size--",batch_x.shape)

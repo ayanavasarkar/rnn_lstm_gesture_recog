@@ -189,28 +189,23 @@ with tf.Session() as sess:
             elif(i==4):
                 test_label.append([0,0,0,1])
                  
+                  
+        batch_x = np.array(test_data)
+        print ("batch size--",batch_x.shape)
                 
-        step = 1
-            # Keep training until reach max iterations for the batches
-        while step < 2:
-            batch_x = np.array(data)
-            print ("batch size--",batch_x.shape)
-                
-            batch_y = np.array(label_y)
-            batch_x = batch_x.reshape((batch_size, n_steps, n_input))
-            batch_y = batch_y.reshape((batch_size,n_classes))
-            #print (batch_y.shape)
+        batch_y = np.array(test_label)
+        batch_x = batch_x.reshape((1, n_steps, n_input))
+        #batch_y = batch_y.reshape((batch_size,n_classes))
+        #print (batch_y.shape)
         
-            # Calculate batch accuracy
-            acc = sess.run(accuracy, feed_dict={x: batch_x, y: batch_y})
+        # Calculate batch accuracy
+        acc = sess.run(accuracy, feed_dict={x: batch_x, y: batch_y})
             
-            print("##################################################")
-            print("Testing Accuracy:", acc)   
+        print("##################################################")
+        print("Testing Accuracy:", acc)   
             #print("The accuracy for testing per 4 iterations of each training sample is --  " +  "{:.5f}".format(a))      
                 
-            step += 1
-                
-        print("Optimization Finished!", i)
+        print("Testing of class", i)
 
         del test_data[:]
         del test_label[:]

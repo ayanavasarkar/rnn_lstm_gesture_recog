@@ -12,17 +12,18 @@ import numpy as np
 import tensorflow as tf
 from tensorflow.contrib import rnn
 
-# Parameters
+# Training Parameters
 learning_rate = 0.0001
 training_iters = 80
 batch_size = 2
 display_step = 4
 
 # Network Parameters
-n_input = 625 # data is (img feature shape : 625 descriptors * 40 frames)
-n_steps = 40 # timesteps
-n_hidden = 128 # hidden layer num of features
-n_classes = 4 # gesture recognition total classes (1-4 classes)
+n_input = 625   # data is (img feature shape : 625 descriptors * 40 frames)
+n_steps = 40    # timesteps
+n_hidden = 128  # hidden layer num of features
+n_classes = 4   # gesture recognition total classes (1-4 classes)
+n_layers = 4
 
 # tf Graph input
 x = tf.placeholder("float", [None, n_steps, n_input])
@@ -36,7 +37,10 @@ biases = {
     'out': tf.Variable(tf.random_normal([n_classes]))
 }
 
-
+def lstmcell():
+    lstm_cell = rnn.BasicLSTMCell(n_hidden, forget_bias=0.0)
+    
+    return tf.contrib.rnn.DropoutWrapper(lstm_cell, output_keep_prob=0.8)
 
 def RNN(x, weights, biases):
 
@@ -48,20 +52,23 @@ def RNN(x, weights, biases):
     x = tf.unstack(x, n_steps, 1)
 
     # Defining a lstm cell with tensorflow (single layered)
-    lstm_cell = rnn.BasicLSTMCell(n_hidden, forget_bias=0.0)
-    #multi_lstm_cell = rnn.MultiRNNCell([rnn.BasicLSTMCell(n_hidden),rnn.BasicLSTMCell(n_hidden)])
+    #
+    #lstm_cell = DropoutWrapper(lstm_cell, output_keep_prob=dropout)
+    #lstm_cell=lstmcell()
+    #lstm_cell = rnn.BasicLSTMCell(n_hidden, forget_bias=0.0)
+    multi_lstm_cell = rnn.MultiRNNCell([rnn.BasicLSTMCell(n_hidden, forget_bias=0.0) for _ in range(n_layers)])
 
     # Get lstm cell output
-    outputs, states = rnn.static_rnn(lstm_cell, x, dtype=tf.float32)
+    outputs, states = rnn.static_rnn(multi_lstm_cell, x, dtype=tf.float32)
 
     # Linear activation, using rnn inner loop last output
     return tf.matmul(outputs[-1], weights['out']) + biases['out']
 
 pred = RNN(x, weights, biases)
-print pred
+
 # Defining loss and optimizer (Adam optimizer most preferable...need to check out others)
 cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=pred, labels=y))
-optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(cost)
+optimizer = tf.train.AdagradOptimizer(learning_rate=learning_rate).minimize(cost)
 
 # Evaluate model
 correct_pred = tf.equal(tf.argmax(pred,1), tf.argmax(y,1))
@@ -170,10 +177,10 @@ with tf.Session() as sess:
     #####################################
 
     for i in range(1,5):
-        counter=1
+        counter=10
         
         f=path+'l'+str(i)+'_'+str(counter)+'.txt'
-        print (f)
+        print("##################################################")
         with open(f) as f:
                     
             for line in f:
@@ -201,7 +208,6 @@ with tf.Session() as sess:
         # Calculate batch accuracy
         acc = sess.run(accuracy, feed_dict={x: batch_x, y: batch_y})
             
-        print("##################################################")
         print("Testing Accuracy:", acc)   
             #print("The accuracy for testing per 4 iterations of each training sample is --  " +  "{:.5f}".format(a))      
                 

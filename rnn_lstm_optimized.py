@@ -14,14 +14,14 @@ from tensorflow.contrib import rnn
 
 # Training Parameters
 learning_rate = 0.0001
-training_iters = 20
+training_iters = 2000
 batch_size = 2
 display_step = 4
 
 # Network Parameters
 n_input = 625   # data is (img feature shape : 625 descriptors * 40 frames)
 n_steps = 40    # timesteps
-n_hidden = 128  # hidden layer num of features
+n_hidden = 512  # hidden layer num of features
 n_classes = 4   # gesture recognition total classes (1-4 classes)
 n_layers = 4
 
@@ -52,7 +52,7 @@ def RNN(x, weights, biases):
     x = tf.unstack(x, n_steps, 1)
 
     # Defining a lstm cell with tensorflow (single layered)
-    #
+
     #lstm_cell = DropoutWrapper(lstm_cell, output_keep_prob=dropout)
     #lstm_cell=lstmcell()
     #lstm_cell = rnn.BasicLSTMCell(n_hidden, forget_bias=0.0)
@@ -109,7 +109,7 @@ with tf.Session() as sess:
         for n in range (0, batch_size):
             
             rand_n = np.random.random_integers(0, len(data)-1)
-            print rand_n
+            #print rand_n
             data_x.append(data[rand_n,:,:])
             
             if(0<= rand_n <=19):
@@ -124,30 +124,30 @@ with tf.Session() as sess:
             elif(60<= rand_n <=79):
                 label_y.append([0,0,0,1])
             
-        step = 1
+        #step = 1
             # Keep training until reach max iterations for the batches
-        while step < 2: 
-            batch_x = np.array(data_x)
-            print ("batch size--",np.array(label_y).shape)
+        #while step < 2: 
+        batch_x = np.array(data_x)
+            #print ("batch size--",np.array(label_y).shape)
                 
-            batch_y = np.array(label_y)
-            batch_x = batch_x.reshape((batch_size, n_steps, n_input))
-            batch_y = batch_y.reshape((batch_size,n_classes))
+        batch_y = np.array(label_y)
+        batch_x = batch_x.reshape((batch_size, n_steps, n_input))
+        batch_y = batch_y.reshape((batch_size,n_classes))
             #print (batch_y.shape)
         
-            sess.run(optimizer, feed_dict={x: batch_x, y: batch_y})
+        sess.run(optimizer, feed_dict={x: batch_x, y: batch_y})
             
-            if((i%10)==0):
+        if((i%10)==0):
             
                 # Calculate batch accuracy
-                acc = sess.run(accuracy, feed_dict={x: batch_x, y: batch_y})
+            acc = sess.run(accuracy, feed_dict={x: batch_x, y: batch_y})
                     
                 # Calculate batch loss
-                loss = sess.run(cost, feed_dict={x: batch_x, y: batch_y})
-                print("Iter " + str(i) + ", Minibatch Loss= " + \
-                      "{:.6f}".format(loss) + ", Training Accuracy= " + \
-                      "{:.5f}".format(acc))
-            step += 1
+            loss = sess.run(cost, feed_dict={x: batch_x, y: batch_y})
+            print("Iter " + str(i) + ", Minibatch Loss= " + \
+                  "{:.6f}".format(loss) + ", Training Accuracy= " + \
+                  "{:.5f}".format(acc))
+        #    step += 1
                 #a = sess.run(accuracy, feed_dict={x: train_test_x, y: train_test_y})
         del data_x[:]
         del label_y[:]        
@@ -200,4 +200,5 @@ with tf.Session() as sess:
         
 
     print ('Final accuracy = ', ((float(accuracy_counter))/(float(n_test)) *float(100))   , '%'    )
+
 print (time.time()-start)

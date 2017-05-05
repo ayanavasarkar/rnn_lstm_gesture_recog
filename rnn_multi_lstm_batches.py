@@ -92,15 +92,6 @@ test_label = []
 
 
 path='/home/admin/rnn&lstm_gesture_recog/data/'
-path_t='/home/admin/rnn&lstm_gesture_recog/test.txt'
-
-with open(path_t) as f_ile:
-    for l in f_ile:
-        s=l.split(" ")
-        acc_test.append(s[0:625])
-        
-
-
 
 with tf.Session() as sess:
     sess.run(init)

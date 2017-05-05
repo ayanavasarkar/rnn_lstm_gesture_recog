@@ -36,7 +36,6 @@ for i in range(1,5):
                 
           
 print ("TEST")
-
 a=np.array(data)
 a=np.reshape(a,(80,40,625))
 

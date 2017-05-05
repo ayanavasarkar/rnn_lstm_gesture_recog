@@ -14,7 +14,7 @@ from tensorflow.contrib import rnn
 
 # Training Parameters
 learning_rate = 0.0001
-training_iters = 2000
+training_iters = 10
 batch_size = 2
 display_step = 4
 
@@ -23,7 +23,7 @@ n_input = 625   # data is (img feature shape : 625 descriptors * 40 frames)
 n_steps = 40    # timesteps
 n_hidden = 512  # hidden layer num of features
 n_classes = 4   # gesture recognition total classes (1-4 classes)
-n_layers = 4
+n_layers = 1
 
 # tf Graph input
 x = tf.placeholder("float", [None, n_steps, n_input])
@@ -86,7 +86,7 @@ label_y=[]
 counter=1
 data_x = []
 acc_test=[]
-dic=OrderedDict()
+
 
 #### Testing Variables
 test_data = []
@@ -137,7 +137,7 @@ with tf.Session() as sess:
         
         sess.run(optimizer, feed_dict={x: batch_x, y: batch_y})
             
-        if((i%10)==0):
+        if((i%50)==0):
             
                 # Calculate batch accuracy
             acc = sess.run(accuracy, feed_dict={x: batch_x, y: batch_y})
@@ -147,11 +147,12 @@ with tf.Session() as sess:
             print("Iter " + str(i) + ", Minibatch Loss= " + \
                   "{:.6f}".format(loss) + ", Training Accuracy= " + \
                   "{:.5f}".format(acc))
+            print("##################################################")
         #    step += 1
                 #a = sess.run(accuracy, feed_dict={x: train_test_x, y: train_test_y})
         del data_x[:]
         del label_y[:]        
-        print("##################################################")
+       
                     
     #####################################
     ######       Testing Loop      ######

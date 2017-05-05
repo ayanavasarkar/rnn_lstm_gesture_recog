@@ -8,13 +8,13 @@ Created on Thu Apr 27 11:36:06 2017
 
 import time
 import numpy as np
-
+from collections import OrderedDict
 import tensorflow as tf
 from tensorflow.contrib import rnn
 
 # Training Parameters
 learning_rate = 0.0001
-training_iters = 80
+training_iters = 20
 batch_size = 2
 display_step = 4
 
@@ -68,7 +68,7 @@ pred = RNN(x, weights, biases)
 
 # Defining loss and optimizer (Adam optimizer most preferable...need to check out others)
 cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=pred, labels=y))
-optimizer = tf.train.AdagradOptimizer(learning_rate=learning_rate).minimize(cost)
+optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(cost)
 
 # Evaluate model
 correct_pred = tf.equal(tf.argmax(pred,1), tf.argmax(y,1))
@@ -81,25 +81,20 @@ init = tf.global_variables_initializer()
 start=time.time()
 
 #### Training Variables
-data=[]
+data=np.load('data.npy')
 label_y=[]
 counter=1
+data_x = []
 acc_test=[]
+dic=OrderedDict()
 
 #### Testing Variables
 test_data = []
 test_label = []
-
+n_test=4
+accuracy_counter=0
 
 path='/home/admin/rnn&lstm_gesture_recog/data/'
-path_t='/home/admin/rnn&lstm_gesture_recog/test.txt'
-
-with open(path_t) as f_ile:
-    for l in f_ile:
-        s=l.split(" ")
-        acc_test.append(s[0:625])
-        
-
 
 
 with tf.Session() as sess:
@@ -108,76 +103,62 @@ with tf.Session() as sess:
     ##########################
     ######          Training Loop      ######
     ##########################
-    for i in range(1,5):
-        counter=1
-        batch_counter=0
+    
+    for i in range (0,training_iters):
         
-        while((counter<21)):
-            batch_counter=0
-            while((batch_counter<batch_size) and (counter<21)):
-                f=path+'l'+str(i)+'_'+str(counter)+'.txt'
-                print (f)
-                with open(f) as f:
-                    
-                    #Taking each lineof 625 values and appending it to the list...Thus 40 frames in total
-                    #40 lines of 625 values in each line
-                    for line in f:
-                        st=line.split(" ")
-                        data.append(st[0:625])
-               
-                    if(i==1):
-                        label_y.append([1,0,0,0])
-                    elif(i==2):
-                        label_y.append([0,1,0,0])
-                    elif(i==3):
-                        label_y.append([0,0,1,0])
-                    elif(i==4):
-                        label_y.append([0,0,0,1])
-                 
-                counter=counter+1
-                batch_counter+=1
-            step = 1
+        for n in range (0, batch_size):
+            
+            rand_n = np.random.random_integers(0, len(data)-1)
+            print rand_n
+            data_x.append(data[rand_n,:,:])
+            
+            if(0<= rand_n <=19):
+                label_y.append([1,0,0,0])
+                
+            elif(20<= rand_n <=39):
+                label_y.append([0,1,0,0])
+                
+            elif(40<= rand_n <=59):
+                label_y.append([0,0,1,0])
+                
+            elif(60<= rand_n <=79):
+                label_y.append([0,0,0,1])
+            
+        step = 1
             # Keep training until reach max iterations for the batches
-            while step < 2:
-                batch_x = np.array(data)
-                print ("batch size--",batch_x.shape)
+        while step < 2: 
+            batch_x = np.array(data_x)
+            print ("batch size--",np.array(label_y).shape)
                 
-                batch_y = np.array(label_y)
-                batch_x = batch_x.reshape((batch_size, n_steps, n_input))
-                batch_y = batch_y.reshape((batch_size,n_classes))
-                #print (batch_y.shape)
+            batch_y = np.array(label_y)
+            batch_x = batch_x.reshape((batch_size, n_steps, n_input))
+            batch_y = batch_y.reshape((batch_size,n_classes))
+            #print (batch_y.shape)
         
-                sess.run(optimizer, feed_dict={x: batch_x, y: batch_y})
-                
-                    # Calculate batch accuracy
+            sess.run(optimizer, feed_dict={x: batch_x, y: batch_y})
+            
+            if((i%10)==0):
+            
+                # Calculate batch accuracy
                 acc = sess.run(accuracy, feed_dict={x: batch_x, y: batch_y})
-                
-                    # Calculate batch loss
+                    
+                # Calculate batch loss
                 loss = sess.run(cost, feed_dict={x: batch_x, y: batch_y})
-                print("Iter " + str(step) + ", Minibatch Loss= " + \
+                print("Iter " + str(i) + ", Minibatch Loss= " + \
                       "{:.6f}".format(loss) + ", Training Accuracy= " + \
                       "{:.5f}".format(acc))
-                    
+            step += 1
                 #a = sess.run(accuracy, feed_dict={x: train_test_x, y: train_test_y})
+        del data_x[:]
+        del label_y[:]        
+        print("##################################################")
                     
-                print("##################################################")
-                    
-                #print("The accuracy for testing per 4 iterations of each training sample is --  " +  "{:.5f}".format(a))      
-                
-                step += 1
-                
-            print("Optimization Finished!", i)
-
-            del data[:]
-            del label_y[:]
-            
-            
     #####################################
     ######       Testing Loop      ######
     #####################################
-
+    
     for i in range(1,5):
-        counter=10
+        counter=1
         
         f=path+'l'+str(i)+'_'+str(counter)+'.txt'
         print("##################################################")
@@ -198,15 +179,16 @@ with tf.Session() as sess:
                  
                   
         batch_x = np.array(test_data)
-        print ("batch size--",batch_x.shape)
-                
+                        
         batch_y = np.array(test_label)
         batch_x = batch_x.reshape((1, n_steps, n_input))
-        #batch_y = batch_y.reshape((batch_size,n_classes))
-        #print (batch_y.shape)
-        
+               
         # Calculate batch accuracy
         acc = sess.run(accuracy, feed_dict={x: batch_x, y: batch_y})
+        if((acc)!=(0.0)):
+            
+            accuracy_counter = accuracy_counter + 1
+            
             
         print("Testing Accuracy:", acc)   
             #print("The accuracy for testing per 4 iterations of each training sample is --  " +  "{:.5f}".format(a))      
@@ -215,7 +197,7 @@ with tf.Session() as sess:
 
         del test_data[:]
         del test_label[:]
-
-
         
+
+    print ('Final accuracy = ', ((float(accuracy_counter))/(float(n_test)) *float(100))   , '%'    )
 print (time.time()-start)

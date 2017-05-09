@@ -220,7 +220,7 @@ s= "Batch size = "+str(batch_size)+"---"+ "Hidden Layers = "+str(n_layers)+"---"
 
 dic[s] = ((float(accuracy_counter))/(float(n_test)) *float(100))
 
-#with open('results.json', 'w') as f:
-#		json.dump(dic, f)
+with open('results.json', 'w') as f:
+		json.dump(dic, f)
 
 print (time.time()-start)

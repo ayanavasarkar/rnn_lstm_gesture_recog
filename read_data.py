@@ -9,24 +9,24 @@ Created on Fri May  5 11:29:16 2017
 import numpy as np
 
 data=[]
-arr=np.zeros((20,40,625))
+arr=np.zeros((30*4,40,625))
 
-path='/home/admin/rnn&lstm_gesture_recog/data/'
+path='/home/admin/rnn&lstm_gesture_recog/new_data/'
 f_n=1
 
 for i in range(1,5):
-        counter=16
-        
-        while((counter<21)):
+        counter=121
+        #lcc_p1_k1_g1 ---- g changes for file number in each class, k is class number, p remains constant
+        while((counter<151)):
                     
-            f=path+'l'+str(i)+'_'+str(counter)+'.txt'
+            f=path+'lcc_p1_k'+str(i)+'_g'+str(counter)+'.txt'
             print (f)
             j=0
             with open(f) as f:
                    
                 for line in f:
                    st=line.split(" ")
-                   data.append(st[0:625])
+                   #data.append(st[0:625])
                    arr[f_n-1,j,:]=st[0:625]
                    #print arr[i-1,j,:]
                    j=j+1
@@ -35,12 +35,12 @@ for i in range(1,5):
                 #print (np.array(data)).shape
                 
           
-print ("TEST")
-a=np.array(data)
-a=np.reshape(a,(20,40,625))
+print ("Train")
+#a=np.array(data)
+#a=np.reshape(a,(300*4,40,625))
 
 np.save('test_data', arr)
-b=np.load('train_data.npy')
+b=np.load('test_data.npy')
 print b
 
 print (np.equal(arr,b))

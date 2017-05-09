@@ -9,13 +9,13 @@ Created on Fri May  5 11:29:16 2017
 import numpy as np
 
 data=[]
-arr=np.zeros((80,40,625))
+arr=np.zeros((20,40,625))
 
 path='/home/admin/rnn&lstm_gesture_recog/data/'
 f_n=1
 
 for i in range(1,5):
-        counter=1
+        counter=16
         
         while((counter<21)):
                     
@@ -37,10 +37,10 @@ for i in range(1,5):
           
 print ("TEST")
 a=np.array(data)
-a=np.reshape(a,(80,40,625))
+a=np.reshape(a,(20,40,625))
 
-np.save('data', arr)
-b=np.load('data.npy')
+np.save('test_data', arr)
+b=np.load('train_data.npy')
 print b
 
 print (np.equal(arr,b))

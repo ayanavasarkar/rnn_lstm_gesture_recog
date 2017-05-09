@@ -8,22 +8,32 @@ Created on Thu Apr 27 11:36:06 2017
 
 import time
 import numpy as np
-from collections import OrderedDict
 import tensorflow as tf
 from tensorflow.contrib import rnn
+import argparse
+import json
+import os
+from collections import OrderedDict
+
+parser = argparse.ArgumentParser()
+parser.add_argument("bs", help="batch_size", type = int)
+parser.add_argument("layers", help="Number of LSTM layers in the memory block", type = int)
+parser.add_argument("cells", help="Number of Cells in each LSTM layer", type= int)
+parser.add_argument("iters", help="number of training iterations",type=int)
+args = parser.parse_args()
 
 # Training Parameters
 learning_rate = 0.0001
-training_iters = 10
-batch_size = 2
+training_iters = args.iters
+batch_size = args.bs
 display_step = 4
 
 # Network Parameters
 n_input = 625   # data is (img feature shape : 625 descriptors * 40 frames)
 n_steps = 40    # timesteps
-n_hidden = 512  # hidden layer num of features
+n_hidden = args.cells  # hidden layer num of features
 n_classes = 4   # gesture recognition total classes (1-4 classes)
-n_layers = 1
+n_layers = args.layers
 
 # tf Graph input
 x = tf.placeholder("float", [None, n_steps, n_input])
@@ -81,7 +91,7 @@ init = tf.global_variables_initializer()
 start=time.time()
 
 #### Training Variables
-data=np.load('data.npy')
+data=np.load('train_data.npy')
 label_y=[]
 counter=1
 data_x = []
@@ -89,9 +99,10 @@ acc_test=[]
 
 
 #### Testing Variables
-test_data = []
+test_data = np.load('test_data.npy')
+test_x = []
 test_label = []
-n_test=4
+n_test=20
 accuracy_counter=0
 
 path='/home/admin/rnn&lstm_gesture_recog/data/'
@@ -158,30 +169,26 @@ with tf.Session() as sess:
     ######       Testing Loop      ######
     #####################################
     
-    for i in range(1,5):
-        counter=1
+    for i in range(0,n_test):
         
-        f=path+'l'+str(i)+'_'+str(counter)+'.txt'
-        print("##################################################")
-        with open(f) as f:
-                    
-            for line in f:
-                st=line.split(" ")
-                test_data.append(st[0:625])
-               
-            if(i==1):
-                test_label.append([1,0,0,0])
-            elif(i==2):
-                test_label.append([0,1,0,0])
-            elif(i==3):
-                test_label.append([0,0,1,0])
-            elif(i==4):
-                test_label.append([0,0,0,1])
+        test_x.append(test_data[i,:,:])
+            
+        if(0<= i <=5):
+            label_y.append([1,0,0,0])
+                
+        elif(5<= i <=10):
+            label_y.append([0,1,0,0])
+                
+        elif(10<= i <=15):
+            label_y.append([0,0,1,0])
+                
+        elif(15<= i <=20):
+            label_y.append([0,0,0,1])
                  
                   
-        batch_x = np.array(test_data)
+        batch_x = np.array(test_x)
                         
-        batch_y = np.array(test_label)
+        batch_y = np.array(label_y)
         batch_x = batch_x.reshape((1, n_steps, n_input))
                
         # Calculate batch accuracy
@@ -196,10 +203,24 @@ with tf.Session() as sess:
                 
         print("Testing of class", i)
 
-        del test_data[:]
-        del test_label[:]
+        del test_x[:]
+        del label_y[:]
         
 
     print ('Final accuracy = ', ((float(accuracy_counter))/(float(n_test)) *float(100))   , '%'    )
+
+if os.path.exists('results.json')==True:
+
+	with open('results.json') as f:
+   		dic = json.load(f)
+else:
+		dic=OrderedDict()	
+
+s= "Batch size = "+str(batch_size)+"---"+ "Hidden Layers = "+str(n_layers)+"---"+"Cells = "+str(n_hidden)+"---"+"Iterations = "+str(training_iters)
+
+dic[s] = ((float(accuracy_counter))/(float(n_test)) *float(100))
+
+with open('results.json', 'w') as f:
+		json.dump(dic, f)
 
 print (time.time()-start)

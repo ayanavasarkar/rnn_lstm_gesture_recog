@@ -9,6 +9,6 @@ Created on Fri May  5 13:08:55 2017
 import numpy as np
 
 
-b=np.load('data.npy')
-print b[1,0,:]
+b=np.load('test_data.npy')
+
 print (len(b))

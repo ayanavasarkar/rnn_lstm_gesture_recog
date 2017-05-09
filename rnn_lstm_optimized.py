@@ -123,16 +123,16 @@ with tf.Session() as sess:
             #print rand_n
             data_x.append(data[rand_n,:,:])
             
-            if(0<= rand_n <=19):
+            if(0<= rand_n <=119):
                 label_y.append([1,0,0,0])
                 
-            elif(20<= rand_n <=39):
+            elif(120<= rand_n <=239):
                 label_y.append([0,1,0,0])
                 
-            elif(40<= rand_n <=59):
+            elif(240<= rand_n <=359):
                 label_y.append([0,0,1,0])
                 
-            elif(60<= rand_n <=79):
+            elif(360<= rand_n <=479):
                 label_y.append([0,0,0,1])
             
         #step = 1

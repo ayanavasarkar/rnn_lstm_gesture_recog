@@ -47,10 +47,6 @@ biases = {
     'out': tf.Variable(tf.random_normal([n_classes]))
 }
 
-def lstmcell():
-    lstm_cell = rnn.BasicLSTMCell(n_hidden, forget_bias=0.0)
-    
-    return tf.contrib.rnn.DropoutWrapper(lstm_cell, output_keep_prob=0.8)
 
 def RNN(x, weights, biases):
 
@@ -67,10 +63,10 @@ def RNN(x, weights, biases):
     #lstm_cell=lstmcell()
     #lstm_cell = rnn.BasicLSTMCell(n_hidden, forget_bias=0.0)
     multi_lstm_cell = rnn.MultiRNNCell([rnn.BasicLSTMCell(n_hidden, forget_bias=0.0) for _ in range(n_layers)])
-
+    
     # Get lstm cell output
     outputs, states = rnn.static_rnn(multi_lstm_cell, x, dtype=tf.float32)
-
+    
     # Linear activation, using rnn inner loop last output
     return tf.matmul(outputs[-1], weights['out']) + biases['out']
 
@@ -214,7 +210,7 @@ with tf.Session() as sess:
             
         print("Testing Accuracy:", acc)   
             #print("The accuracy for testing per 4 iterations of each training sample is --  " +  "{:.5f}".format(a))      
-                
+        tf.Print(correct_pred, [correct_pred])        
         print("Testing of class", i)
 
         del test_x[:]
@@ -239,7 +235,6 @@ with open('results.json', 'w') as f:
 
 print (time.time()-start)
 
-'''
 print ("one= ", one)
 print ("two= ", two)
 print ("three= ", three)
@@ -248,4 +243,3 @@ print ("One= ", One)
 print ("Two= ", Two)
 print ("Three= ", Three)
 print ("Four= ", Four)
-'''

@@ -20,7 +20,7 @@ parser.add_argument("bs", help="batch_size", type = int)
 parser.add_argument("layers", help="Number of LSTM layers in the memory block", type = int)
 parser.add_argument("cells", help="Number of Cells in each LSTM layer", type= int)
 parser.add_argument("iters", help="number of training iterations",type=int)
-#parser.add_argument("output", help="number of training iterations",type=int)
+parser.add_argument("output", help="number of training iterations",type=int)
 args = parser.parse_args()
 
 # Training Parameters
@@ -35,7 +35,7 @@ n_steps = 40    # timesteps
 n_hidden = args.cells  # hidden layer num of features
 n_classes = 4   # gesture recognition total classes (1-4 classes)
 n_layers = args.layers
-#outp = args.output
+outp = args.output
 
 # tf Graph input
 x = tf.placeholder("float", [None, n_steps, n_input])
@@ -85,21 +85,14 @@ def RNN_test(x, weights, biases):
 
     # Defining a lstm cell with tensorflow (single layered)
 
-    #lstm_cell = DropoutWrapper(lstm_cell, output_keep_prob=dropout)
-    #lstm_cell=lstmcell()
-    #lstm_cell = rnn.BasicLSTMCell(n_hidden, forget_bias=0.0)
     multi_lstm_cell = rnn.MultiRNNCell([rnn.BasicLSTMCell(n_hidden, forget_bias=0.0, reuse= True) for _ in range(n_layers)])
 
     # Get lstm cell output
     outputs, states = rnn.static_rnn(multi_lstm_cell, x, dtype=tf.float32)
 
     # Linear activation, using rnn inner loop last output
-    #test_array[1] = tf.matmul(outputs[10], weights['out']) + biases['out']
-    #test_array[2] = tf.matmul(outputs[20], weights['out']) + biases['out']
-    #test_array[3] = tf.matmul(outputs[-10], weights['out']) + biases['out']
-    #test_array[4] = tf.matmul(outputs[-2], weights['out']) + biases['out']
-    #test_array[0] = tf.matmul(outputs[-1], weights['out']) + biases['out']
-    return tf.matmul(outputs[-15], weights['out']) + biases['out']
+    
+    return (tf.matmul(outputs[outp], weights['out']) + biases['out']  )
 
 pred = RNN(x, weights, biases)
 
@@ -243,7 +236,7 @@ with tf.Session() as sess:
             
         print("Testing Accuracy:", acc)   
             #print("The accuracy for testing per 4 iterations of each training sample is --  " +  "{:.5f}".format(a))      
-        tf.Print(correct_pred, [correct_pred])        
+               
         print("Testing of class", i)
 
         del test_x[:]
@@ -252,9 +245,9 @@ with tf.Session() as sess:
 
     print ('Final accuracy = ', ((float(accuracy_counter))/(float(n_test)) *float(100))   , '%'    )
 
-if os.path.exists('results.json')==True:
+if os.path.exists('results'+str(outp)+'.json')==True:
 
-	with open('results.json') as f:
+	with open('results'+str(outp)+'.json') as f:
    		dic = json.load(f)
 else:
 		dic=OrderedDict()	
@@ -268,6 +261,7 @@ dic[s] = ((float(accuracy_counter))/(float(n_test)) *float(100))
 
 print (time.time()-start)
 
+'''
 print ("one= ", one)
 print ("two= ", two)
 print ("three= ", three)
@@ -276,3 +270,4 @@ print ("One= ", One)
 print ("Two= ", Two)
 print ("Three= ", Three)
 print ("Four= ", Four)
+'''

@@ -20,6 +20,7 @@ parser.add_argument("bs", help="batch_size", type = int)
 parser.add_argument("layers", help="Number of LSTM layers in the memory block", type = int)
 parser.add_argument("cells", help="Number of Cells in each LSTM layer", type= int)
 parser.add_argument("iters", help="number of training iterations",type=int)
+parser.add_argument("output", help="number of training iterations",type=int)
 args = parser.parse_args()
 
 # Training Parameters
@@ -34,6 +35,7 @@ n_steps = 40    # timesteps
 n_hidden = args.cells  # hidden layer num of features
 n_classes = 4   # gesture recognition total classes (1-4 classes)
 n_layers = args.layers
+outp = args.output
 
 # tf Graph input
 x = tf.placeholder("float", [None, n_steps, n_input])
@@ -70,6 +72,28 @@ def RNN(x, weights, biases):
     # Linear activation, using rnn inner loop last output
     return tf.matmul(outputs[-1], weights['out']) + biases['out']
 
+#test_array = np.zeros(1,5)
+
+def RNN_test(x, weights, biases):
+
+    # Prepare data shape to match `rnn` function requirements
+    # Current data input shape: (batch_size, n_steps, n_input)
+    # Required shape: 'n_steps' tensors list of shape (batch_size, n_input)
+
+    # Unstack to get a list of 'n_steps' tensors of shape (batch_size, n_input)
+    x = tf.unstack(x, n_steps, 1)
+
+    # Defining a lstm cell with tensorflow (single layered)
+
+    multi_lstm_cell = rnn.MultiRNNCell([rnn.BasicLSTMCell(n_hidden, forget_bias=0.0, reuse= True) for _ in range(n_layers)])
+
+    # Get lstm cell output
+    outputs, states = rnn.static_rnn(multi_lstm_cell, x, dtype=tf.float32)
+
+    # Linear activation, using rnn inner loop last output
+    
+    return tf.matmul(outputs[outp], weights['out']) + biases['out']
+
 pred = RNN(x, weights, biases)
 
 # Defining loss and optimizer (Adam optimizer most preferable...need to check out others)
@@ -77,7 +101,9 @@ cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=pred, label
 optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(cost)
 
 # Evaluate model
-correct_pred = tf.equal(tf.argmax(pred,1), tf.argmax(y,1))
+test_pred = RNN_test(x, weights, biases)
+correct_pred = tf.equal(tf.argmax(test_pred,1), tf.argmax(y,1))
+
 accuracy = tf.reduce_mean(tf.cast(correct_pred, tf.float32))
 
 # Initializing the variables
@@ -219,9 +245,9 @@ with tf.Session() as sess:
 
     print ('Final accuracy = ', ((float(accuracy_counter))/(float(n_test)) *float(100))   , '%'    )
 
-if os.path.exists('results.json')==True:
+if os.path.exists('results'+str(outp)+'.json')==True:
 
-	with open('results.json') as f:
+	with open('results'+str(outp)+'.json') as f:
    		dic = json.load(f)
 else:
 		dic=OrderedDict()	
@@ -230,11 +256,12 @@ s= "Batch size = "+str(batch_size)+"---"+ "Hidden Layers = "+str(n_layers)+"---"
 
 dic[s] = ((float(accuracy_counter))/(float(n_test)) *float(100))
 
-with open('results.json', 'w') as f:
-		json.dump(dic, f)
+#with open('results.json', 'w') as f:
+#		json.dump(dic, f)
 
 print (time.time()-start)
 
+'''
 print ("one= ", one)
 print ("two= ", two)
 print ("three= ", three)
@@ -243,3 +270,4 @@ print ("One= ", One)
 print ("Two= ", Two)
 print ("Three= ", Three)
 print ("Four= ", Four)
+'''

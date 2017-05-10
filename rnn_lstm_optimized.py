@@ -261,7 +261,7 @@ dic[s] = ((float(accuracy_counter))/(float(n_test)) *float(100))
 
 print (time.time()-start)
 
-'''
+
 print ("one= ", one)
 print ("two= ", two)
 print ("three= ", three)
@@ -270,4 +270,3 @@ print ("One= ", One)
 print ("Two= ", Two)
 print ("Three= ", Three)
 print ("Four= ", Four)
-'''

@@ -96,14 +96,21 @@ label_y=[]
 counter=1
 data_x = []
 acc_test=[]
-
+one = 0
+two = 0
+three = 0
+four = 0
 
 #### Testing Variables
 test_data = np.load('test_data.npy')
 test_x = []
 test_label = []
-n_test=20
+n_test=120
 accuracy_counter=0
+One = 0
+Two = 0
+Three = 0
+Four = 0
 
 path='/home/admin/rnn&lstm_gesture_recog/data/'
 
@@ -125,15 +132,19 @@ with tf.Session() as sess:
             
             if(0<= rand_n <=119):
                 label_y.append([1,0,0,0])
+                one+=1
                 
             elif(120<= rand_n <=239):
                 label_y.append([0,1,0,0])
+                two+=1
                 
             elif(240<= rand_n <=359):
                 label_y.append([0,0,1,0])
+                three+=1
                 
             elif(360<= rand_n <=479):
                 label_y.append([0,0,0,1])
+                four+=1
             
         #step = 1
             # Keep training until reach max iterations for the batches
@@ -173,18 +184,21 @@ with tf.Session() as sess:
         
         test_x.append(test_data[i,:,:])
             
-        if(0<= i <=5):
+        if(0<= i <=29):
             label_y.append([1,0,0,0])
+            One+=1
                 
-        elif(5<= i <=10):
+        elif(30<= i <=59):
             label_y.append([0,1,0,0])
-                
-        elif(10<= i <=15):
+            Two+=1    
+            
+        elif(60<= i <=89):
             label_y.append([0,0,1,0])
-                
-        elif(15<= i <=20):
+            Three+=1    
+            
+        elif(90<= i <=119):
             label_y.append([0,0,0,1])
-                 
+            Four+=1
                   
         batch_x = np.array(test_x)
                         
@@ -224,3 +238,14 @@ with open('results.json', 'w') as f:
 		json.dump(dic, f)
 
 print (time.time()-start)
+
+'''
+print ("one= ", one)
+print ("two= ", two)
+print ("three= ", three)
+print ("four= ", four)
+print ("One= ", One)
+print ("Two= ", Two)
+print ("Three= ", Three)
+print ("Four= ", Four)
+'''

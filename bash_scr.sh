@@ -1,7 +1,7 @@
 #!/bin/sh
 
 
-for out in -1 -2 -5 -10 -15 -20 -30;do
+for out in -30;do	#-1 -2 -5 -10 -15 -20 
 	echo "$out"
 
 

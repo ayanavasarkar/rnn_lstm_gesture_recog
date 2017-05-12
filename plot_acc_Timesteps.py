@@ -9,6 +9,7 @@ Created on Fri May 12 10:54:21 2017
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
+from pylab import figure, axes, pie, title, show
 
 x_1 = [-30,-20, -15,  -10, -5, -2, -1]
 accuracy_1 = [20.833, 44.167, 50.833, 95.833, 100, 100, 100]
@@ -39,3 +40,4 @@ ax.yaxis.set_major_locator(ticker.MultipleLocator(5))
 
 plt.legend([p1], loc='upper center', fontsize = 'xx-large', borderaxespad=0.)	#
 plt.show()
+fig.savefig('figure.png')

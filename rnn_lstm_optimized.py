@@ -70,7 +70,7 @@ def RNN(x, weights, biases):
     outputs, states = rnn.static_rnn(multi_lstm_cell, x, dtype=tf.float32)
     
     # Linear activation, using rnn inner loop last output
-    return tf.matmul(outputs[-1], weights['out']) + biases['out']
+    return tf.matmul(outputs[outp], weights['out']) + biases['out']
 
 #test_array = np.zeros(1,5)
 
@@ -110,7 +110,7 @@ accuracy = tf.reduce_mean(tf.cast(correct_pred, tf.float32))
 init = tf.global_variables_initializer()
 
 
-start=time.time()
+
 
 #### Training Variables
 data=np.load('train_data.npy')
@@ -233,10 +233,10 @@ with tf.Session() as sess:
             
             accuracy_counter = accuracy_counter + 1
             
-            
+        start=time.time()   
         print("Testing Accuracy:", acc)   
             #print("The accuracy for testing per 4 iterations of each training sample is --  " +  "{:.5f}".format(a))      
-        tf.Print(correct_pred, [correct_pred])        
+        print (time.time()-start)  
         print("Testing of class", i)
 
         del test_x[:]
@@ -259,7 +259,7 @@ dic[s] = ((float(accuracy_counter))/(float(n_test)) *float(100))
 with open('results'+str(outp)+'.json', 'w') as f:
 		json.dump(dic, f)
 
-print (time.time()-start)
+
 
 
 print ("one= ", one)

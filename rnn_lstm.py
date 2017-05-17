@@ -245,9 +245,9 @@ with tf.Session() as sess:
 
     print ('Final accuracy = ', ((float(accuracy_counter))/(float(n_test)) *float(100))   , '%'    )
 
-if os.path.exists('results'+str(outp)+'.json')==True:
+if os.path.exists('results_after'+'.json')==True:
 
-	with open('results'+str(outp)+'.json') as f:
+	with open('results_after'+'.json') as f:
    		dic = json.load(f)
 else:
 		dic=OrderedDict()	
@@ -256,8 +256,9 @@ s= "Batch size = "+str(batch_size)+"---"+ "Hidden Layers = "+str(n_layers)+"---"
 
 dic[s] = ((float(accuracy_counter))/(float(n_test)) *float(100))
 
-#with open('results.json', 'w') as f:
-#		json.dump(dic, f)
+with open('results_after'+'.json', 'w') as f:
+		json.dump(dic, f)
+
 
 print (time.time()-start)
 

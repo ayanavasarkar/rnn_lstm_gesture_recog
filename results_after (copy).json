@@ -1,0 +1,29 @@
+{"Batch size = 2---Hidden Layers = 1---Cells = 8---Iterations = 1000": 48.333333333333336,
+"Batch size = 2---Hidden Layers = 1---Cells = 8---Iterations = 2000": 50.0,
+"Batch size = 2---Hidden Layers = 1---Cells = 8---Iterations = 3000": 90.83333333333333,
+"Batch size = 2---Hidden Layers = 1---Cells = 8---Iterations = 4000": 100.0,
+"Batch size = 2---Hidden Layers = 1---Cells = 8---Iterations = 5000": 68.33333333333333, 
+"Batch size = 2---Hidden Layers = 1---Cells = 8---Iterations = 6000": 95.83333333333334, 
+"Batch size = 2---Hidden Layers = 1---Cells = 8---Iterations = 7000": 97.5, 
+"Batch size = 2---Hidden Layers = 1---Cells = 8---Iterations = 8000": 88.33333333333333,
+"Batch size = 2---Hidden Layers = 1---Cells = 8---Iterations = 9000": 75.83333333333333,
+"Batch size = 2---Hidden Layers = 1---Cells = 8---Iterations = 10000": 76.66666666666667, 
+
+"Batch size = 2---Hidden Layers = 1---Cells = 10---Iterations = 1000": 47.5, 
+ 
+
+"Batch size = 2---Hidden Layers = 1---Cells = 10---Iterations = 2000": 39.166666666666664, 
+ 
+"Batch size = 2---Hidden Layers = 1---Cells = 10---Iterations = 3000": 51.66666666666667,
+"Batch size = 2---Hidden Layers = 1---Cells = 10---Iterations = 4000": 61.66666666666667, 
+"Batch size = 2---Hidden Layers = 1---Cells = 10---Iterations = 5000": 98.33333333333333, 
+ 
+"Batch size = 2---Hidden Layers = 1---Cells = 10---Iterations = 6000": 100.0, 
+
+
+"Batch size = 2---Hidden Layers = 1---Cells = 10---Iterations = 7000": 72.5,
+"Batch size = 2---Hidden Layers = 1---Cells = 10---Iterations = 8000": 80.0, 
+ 
+"Batch size = 2---Hidden Layers = 1---Cells = 10---Iterations = 9000": 100.0, 
+
+"Batch size = 2---Hidden Layers = 1---Cells = 10---Iterations = 10000": 100.0}

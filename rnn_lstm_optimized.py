@@ -43,7 +43,7 @@ y = tf.placeholder("float", [None, n_classes])
 
 # Define weights & biases
 weights = {
-    'out': tf.Variable(tf.random_normal([n_hidden, n_classes]))
+    'out': tf.Variable(tf.random_normal([n_hidden, n_classes]), name="weights")
 }
 biases = {
     'out': tf.Variable(tf.random_normal([n_classes]))
@@ -70,9 +70,8 @@ def RNN(x, weights, biases):
     outputs, states = rnn.static_rnn(multi_lstm_cell, x, dtype=tf.float32)
     
     # Linear activation, using rnn inner loop last output
-    return tf.matmul(outputs[outp], weights['out']) + biases['out']
+    return tf.matmul(outputs[-1], weights['out']) + biases['out']
 
-#test_array = np.zeros(1,5)
 
 def RNN_test(x, weights, biases):
 
@@ -92,7 +91,7 @@ def RNN_test(x, weights, biases):
 
     # Linear activation, using rnn inner loop last output
     
-    return tf.matmul(outputs[outp], weights['out']) + biases['out']
+    return tf.matmul(outputs[-1], weights['out']) + biases['out']
 
 pred = RNN(x, weights, biases)
 
@@ -102,13 +101,13 @@ optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(cost)
 
 # Evaluate model
 test_pred = RNN_test(x, weights, biases)
-correct_pred = tf.equal(tf.argmax(test_pred,1), tf.argmax(y,1))
+correct_pred = tf.equal(tf.argmax(pred,1), tf.argmax(y,1))
+corr = tf.equal(tf.argmax(test_pred,1), tf.argmax(y,1))
 
 accuracy = tf.reduce_mean(tf.cast(correct_pred, tf.float32))
-
+accuracy_test = tf.reduce_mean(tf.cast(corr, tf.float32))
 # Initializing the variables
 init = tf.global_variables_initializer()
-
 
 
 
@@ -184,19 +183,23 @@ with tf.Session() as sess:
         if((i%50)==0):
             
                 # Calculate batch accuracy
-            acc = sess.run(accuracy, feed_dict={x: batch_x, y: batch_y})
+            #acc = sess.run(accuracy, feed_dict={x: batch_x, y: batch_y})
                     
                 # Calculate batch loss
             loss = sess.run(cost, feed_dict={x: batch_x, y: batch_y})
-            print("Iter " + str(i) + ", Minibatch Loss= " + \
-                  "{:.6f}".format(loss) + ", Training Accuracy= " + \
-                  "{:.5f}".format(acc))
+            #print("Iter " + str(i) + ", Minibatch Loss= " + \
+            #      "{:.6f}".format(loss) + ", Training Accuracy= " + \
+            #      "{:.5f}".format(acc))
             print("##################################################")
         #    step += 1
                 #a = sess.run(accuracy, feed_dict={x: train_test_x, y: train_test_y})
         del data_x[:]
         del label_y[:]        
-       
+    ### The following 3 lines show how to call variables used in the training
+    variables_names =[v.name for v in tf.trainable_variables() if v.name == "weights:0"]
+    values = sess.run(variables_names)
+    for k,v in zip(variables_names, values):
+        print(k, v)
                     
     #####################################
     ######       Testing Loop      ######
@@ -228,15 +231,61 @@ with tf.Session() as sess:
         batch_x = batch_x.reshape((1, n_steps, n_input))
                
         # Calculate batch accuracy
+        acc = sess.run(accuracy_test, feed_dict={x: batch_x, y: batch_y})
+        
+        
+        if((acc)!=(0.0)):
+            
+            accuracy_counter = accuracy_counter + 1
+            
+        
+        print("Testing Accuracy:", acc)   
+            #print("The accuracy for testing per 4 iterations of each training sample is --  " +  "{:.5f}".format(a))      
+       
+        print("Testing of class", i)
+
+        del test_x[:]
+        del label_y[:]
+        
+    print ('Final accuracy = ', ((float(accuracy_counter))/(float(n_test)) *float(100))   , '%'    )
+    
+'''
+    accuracy_counter = 0
+    for i in range(0,n_test):
+        
+        test_x.append(test_data[i,:,:])
+          
+        if(0<= i <=29):
+            label_y.append([1,0,0,0])
+            One+=1
+                
+        elif(30<= i <=59):
+            label_y.append([0,1,0,0])
+            Two+=1    
+            
+        elif(60<= i <=89):
+            label_y.append([0,0,1,0])
+            Three+=1    
+            
+        elif(90<= i <=119):
+            label_y.append([0,0,0,1])
+            Four+=1
+                  
+        batch_x = np.array(test_x)
+                        
+        batch_y = np.array(label_y)
+        batch_x = batch_x.reshape((1, n_steps, n_input))
+               
+        # Calculate batch accuracy
         acc = sess.run(accuracy, feed_dict={x: batch_x, y: batch_y})
         if((acc)!=(0.0)):
             
             accuracy_counter = accuracy_counter + 1
             
-        start=time.time()   
+        
         print("Testing Accuracy:", acc)   
             #print("The accuracy for testing per 4 iterations of each training sample is --  " +  "{:.5f}".format(a))      
-        print (time.time()-start)  
+       
         print("Testing of class", i)
 
         del test_x[:]
@@ -244,6 +293,7 @@ with tf.Session() as sess:
         
 
     print ('Final accuracy = ', ((float(accuracy_counter))/(float(n_test)) *float(100))   , '%'    )
+
 
 if os.path.exists('results'+str(outp)+'.json')==True:
 
@@ -255,6 +305,7 @@ else:
 s= "Batch size = "+str(batch_size)+"---"+ "Hidden Layers = "+str(n_layers)+"---"+"Cells = "+str(n_hidden)+"---"+"Iterations = "+str(training_iters)
 
 dic[s] = ((float(accuracy_counter))/(float(n_test)) *float(100))
+
 
 with open('results'+str(outp)+'.json', 'w') as f:
 		json.dump(dic, f)
@@ -270,3 +321,4 @@ print ("One= ", One)
 print ("Two= ", Two)
 print ("Three= ", Three)
 print ("Four= ", Four)
+'''

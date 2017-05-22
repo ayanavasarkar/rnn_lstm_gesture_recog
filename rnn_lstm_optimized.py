@@ -194,8 +194,9 @@ with tf.Session() as sess:
         #    step += 1
                 #a = sess.run(accuracy, feed_dict={x: train_test_x, y: train_test_y})
         del data_x[:]
-        del label_y[:]        
-    ### The following 3 lines show how to call variables used in the training
+        del label_y[:]     
+        
+    ### The following 3 lines show how to call variables used in the training after training has been done
     variables_names =[v.name for v in tf.trainable_variables() if v.name == "weights:0"]
     values = sess.run(variables_names)
     for k,v in zip(variables_names, values):
@@ -250,50 +251,6 @@ with tf.Session() as sess:
     print ('Final accuracy = ', ((float(accuracy_counter))/(float(n_test)) *float(100))   , '%'    )
     
 '''
-    accuracy_counter = 0
-    for i in range(0,n_test):
-        
-        test_x.append(test_data[i,:,:])
-          
-        if(0<= i <=29):
-            label_y.append([1,0,0,0])
-            One+=1
-                
-        elif(30<= i <=59):
-            label_y.append([0,1,0,0])
-            Two+=1    
-            
-        elif(60<= i <=89):
-            label_y.append([0,0,1,0])
-            Three+=1    
-            
-        elif(90<= i <=119):
-            label_y.append([0,0,0,1])
-            Four+=1
-                  
-        batch_x = np.array(test_x)
-                        
-        batch_y = np.array(label_y)
-        batch_x = batch_x.reshape((1, n_steps, n_input))
-               
-        # Calculate batch accuracy
-        acc = sess.run(accuracy, feed_dict={x: batch_x, y: batch_y})
-        if((acc)!=(0.0)):
-            
-            accuracy_counter = accuracy_counter + 1
-            
-        
-        print("Testing Accuracy:", acc)   
-            #print("The accuracy for testing per 4 iterations of each training sample is --  " +  "{:.5f}".format(a))      
-       
-        print("Testing of class", i)
-
-        del test_x[:]
-        del label_y[:]
-        
-
-    print ('Final accuracy = ', ((float(accuracy_counter))/(float(n_test)) *float(100))   , '%'    )
-
 
 if os.path.exists('results'+str(outp)+'.json')==True:
 

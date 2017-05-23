@@ -138,6 +138,7 @@ Four = 0
 
 path='/home/admin/rnn&lstm_gesture_recog/data/'
 
+list_max = []
 
 with tf.Session() as sess:
     sess.run(init)
@@ -236,8 +237,9 @@ with tf.Session() as sess:
         
         prediction_vector = sess.run(test_pred, feed_dict={x: batch_x, y: batch_y})
         ###### Calculate the max of the pred vector
-        
-        
+        #print ("Prediction Vector---", prediction_vector)
+        maximum = np.amax(prediction_vector, axis=1)
+        list_max.append(maximum)
         
         # Calculate batch accuracy
         acc = sess.run(accuracy, feed_dict={x: batch_x, y: batch_y})
@@ -246,16 +248,14 @@ with tf.Session() as sess:
             accuracy_counter = accuracy_counter + 1
             
         print("Testing Accuracy:", acc)
-        #print ("Prediction Vector---", prediction_vector)
-                 
-       
+        
         del test_x[:]
         del label_y[:]
         
 
     print ('Final accuracy = ', ((float(accuracy_counter))/(float(n_test)) *float(100))   , '%'    )
 
- 
+print np.array(list_max)
 '''
 if os.path.exists('results'+str(outp)+'.json')==True:
 

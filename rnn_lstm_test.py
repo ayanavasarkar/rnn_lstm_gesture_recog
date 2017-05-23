@@ -129,7 +129,7 @@ four = 0
 test_data = np.load('test_data.npy')
 test_x = []
 test_label = []
-n_test=np.array([2,34,68,118])
+n_test=120
 accuracy_counter=0
 One = 0
 Two = 0
@@ -137,8 +137,8 @@ Three = 0
 Four = 0
 
 path='/home/admin/rnn&lstm_gesture_recog/data/'
-lis = []
-saver = tf.train.Saver()
+
+
 with tf.Session() as sess:
     sess.run(init)
     
@@ -208,9 +208,9 @@ with tf.Session() as sess:
     ######       Testing Loop      ######
     #####################################
     
-    for i in range(0,4):
+    for i in range(0,n_test):
         
-        test_x.append(test_data[n_test[i],:,:])
+        test_x.append(test_data[i,:,:])
             
         if(0<= i <=29):
             label_y.append([1,0,0,0])
@@ -233,36 +233,27 @@ with tf.Session() as sess:
         batch_y = np.array(label_y)
         batch_x = batch_x.reshape((1, n_steps, n_input))
                
-        # Calculate batch accuracy
+        
         prediction_vector = sess.run(test_pred, feed_dict={x: batch_x, y: batch_y})
+        ###### Calculate the max of the pred vector
+        
+        
+        
+        # Calculate batch accuracy
         acc = sess.run(accuracy, feed_dict={x: batch_x, y: batch_y})
         if((acc)!=(0.0)):
             
             accuracy_counter = accuracy_counter + 1
             
-        start=time.time()   
         print("Testing Accuracy:", acc)
-        print ("Prediction Vector---", prediction_vector)
-            #print("The accuracy for testing per 4 iterations of each training sample is --  " +  "{:.5f}".format(a))      
-        #print (time.time()-start)  
+        #print ("Prediction Vector---", prediction_vector)
+                 
        
-        if os.path.exists('timestep_pred_vec'+str(i)+'.json')==True:
-
-            with open('timestep_pred_vec'+str(i)+'.json') as f:
-                dic = json.load(f)
-                dic = OrderedDict(sorted(dic.items(), key=lambda t: t[0]))
-        else:
-            dic= OrderedDict()	
-        lis= (prediction_vector.tolist())
-        dic [outp] = lis
-        with open('timestep_pred_vec'+str(i)+'.json', 'w') as f:
-            json.dump(dic, f)
         del test_x[:]
-        del lis[:]
         del label_y[:]
         
 
-    print ('Final accuracy = ', ((float(accuracy_counter))/(float(4)) *float(100))   , '%'    )
+    print ('Final accuracy = ', ((float(accuracy_counter))/(float(n_test)) *float(100))   , '%'    )
 
  
 '''

@@ -36,7 +36,7 @@ n_hidden = args.cells  # hidden layer num of features
 n_classes = 4   # gesture recognition total classes (1-4 classes)
 n_layers = args.layers
 outp = args.output
-time_step_counter=-41
+
 
 # tf Graph input
 x = tf.placeholder("float", [None, n_steps, n_input])

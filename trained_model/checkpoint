@@ -1,0 +1,2 @@
+model_checkpoint_path: "/home/admin/rnn&lstm_gesture_recog/trained_model/model.ckpt"
+all_model_checkpoint_paths: "/home/admin/rnn&lstm_gesture_recog/trained_model/model.ckpt"

@@ -36,6 +36,7 @@ n_hidden = args.cells  # hidden layer num of features
 n_classes = 4   # gesture recognition total classes (1-4 classes)
 n_layers = args.layers
 outp = args.output
+time_step_counter=-41
 
 # tf Graph input
 x = tf.placeholder("float", [None, n_steps, n_input])
@@ -74,8 +75,9 @@ def RNN(x, weights, biases):
 
 #test_array = np.zeros(1,5)
 
-def RNN_test(x, weights, biases):
 
+def RNN_test(x, weights, biases):
+    
     # Prepare data shape to match `rnn` function requirements
     # Current data input shape: (batch_size, n_steps, n_input)
     # Required shape: 'n_steps' tensors list of shape (batch_size, n_input)
@@ -95,8 +97,8 @@ def RNN_test(x, weights, biases):
 # The outputs is a vector containing outputs of each cell in the LSTM layer
 # Thus a single layer with 8 cells give 8 values in a vector as output
 # if there are multiple layers then only the last layer output is given
-
-    return tf.matmul(outputs[outp], weights['out']) + biases['out']
+    
+    return tf.matmul(outputs[time_step_counter], weights['out']) + biases['out']
 
 pred = RNN(x, weights, biases)
 
@@ -105,7 +107,7 @@ cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=pred, label
 optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(cost)
 
 # Evaluate model
-test_pred = RNN_test(x, weights, biases)
+test_pred = RNN_test(x, weights, biases, time_step_counter)
 correct_pred = tf.equal(tf.argmax(test_pred,1), tf.argmax(y,1))
 
 accuracy = tf.reduce_mean(tf.cast(correct_pred, tf.float32))
@@ -208,7 +210,9 @@ with tf.Session() as sess:
     #####################################
     ######       Testing Loop      ######
     #####################################
-    
+    for t_steps in range(-40,0):
+        time_step_counter+=1
+        
     for i in range(0,n_test):
         
         test_x.append(test_data[i,:,:])

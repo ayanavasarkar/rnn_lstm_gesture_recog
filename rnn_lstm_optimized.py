@@ -180,7 +180,7 @@ with tf.Session() as sess:
         
         sess.run(optimizer, feed_dict={x: batch_x, y: batch_y})
             
-        if((i%50)==0):
+        if((i%100)==0):
             
                 # Calculate batch accuracy
             #acc = sess.run(accuracy, feed_dict={x: batch_x, y: batch_y})
@@ -197,10 +197,10 @@ with tf.Session() as sess:
         del label_y[:]     
         
     ### The following 3 lines show how to call variables used in the training after training has been done
-    variables_names =[v.name for v in tf.trainable_variables() if v.name == "weights:0"]
-    values = sess.run(variables_names)
-    for k,v in zip(variables_names, values):
-        print(k, v)
+    #variables_names =[v.name for v in tf.trainable_variables() if v.name == "weights:0"]
+    #values = sess.run(variables_names)
+    #for k,v in zip(variables_names, values):
+    #    print(k, v)
                     
     #####################################
     ######       Testing Loop      ######

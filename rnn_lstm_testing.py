@@ -145,7 +145,7 @@ with tf.Session() as sess:
         prediction_vector = sess.run(test_pred, feed_dict={x: batch_x, y: batch_y})
         ###### Calculate the max of the pred vector
         #print ("Prediction Vector---", prediction_vector)
-        maximum = np.amax(prediction_vector, axis=1)
+        maximum = np.amin(prediction_vector, axis=1)
         list_max.append(maximum)
         
         # Calculate batch accuracy
@@ -171,3 +171,44 @@ print (sum(list_max[60:90]) / 30)
 print (sum(list_max[90:120]) / 30)
 
 print (sum(list_max) /float(len(list_max)))
+
+
+if os.path.exists('/home/admin/rnn&lstm_gesture_recog/max_mins/class1.npy')==True:
+    class1 = list(np.load('/home/admin/rnn&lstm_gesture_recog/max_mins/class1.npy'))
+else:
+    class1 = []
+
+if os.path.exists('/home/admin/rnn&lstm_gesture_recog/max_mins/class2.npy')==True:
+    class2 = list(np.load('/home/admin/rnn&lstm_gesture_recog/max_mins/class2.npy'))
+else:
+    class2 = []
+    
+if os.path.exists('/home/admin/rnn&lstm_gesture_recog/max_mins/class3.npy')==True:
+    class3 = list(np.load('/home/admin/rnn&lstm_gesture_recog/max_mins/class3.npy'))
+else:
+    class3 = []
+    
+if os.path.exists('/home/admin/rnn&lstm_gesture_recog/max_mins/class4.npy')==True:
+    class4 = list(np.load('/home/admin/rnn&lstm_gesture_recog/max_mins/class4.npy'))
+else:
+    class4 = []
+    
+if os.path.exists('/home/admin/rnn&lstm_gesture_recog/max_mins/overall_class.npy')==True:
+    overall_class = list(np.load('/home/admin/rnn&lstm_gesture_recog/max_mins/overall_class.npy'))
+else:
+    overall_class = []
+
+class1.append(sum(list_max[0:30]) / 30)
+class2.append(sum(list_max[30:60]) / 30)
+class3.append(sum(list_max[60:90]) / 30)
+class4.append(sum(list_max[90:120]) / 30)
+
+overall_class.append(sum(list_max) /float(len(list_max)))
+
+np.save('/home/admin/rnn&lstm_gesture_recog/max_mins/class1', np.array(class1))
+np.save('/home/admin/rnn&lstm_gesture_recog/max_mins/class2', np.array(class2))
+np.save('/home/admin/rnn&lstm_gesture_recog/max_mins/class3', np.array(class3))
+np.save('/home/admin/rnn&lstm_gesture_recog/max_mins/class4', np.array(class4))
+
+np.save('/home/admin/rnn&lstm_gesture_recog/max_mins/overall_class', np.array(overall_class))
+

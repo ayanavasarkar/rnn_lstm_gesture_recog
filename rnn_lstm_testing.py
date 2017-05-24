@@ -205,10 +205,11 @@ class4.append(sum(list_max[90:120]) / 30)
 
 overall_class.append(sum(list_max) /float(len(list_max)))
 
+'''
 np.save('/home/admin/rnn&lstm_gesture_recog/max_mins/class1', np.array(class1))
 np.save('/home/admin/rnn&lstm_gesture_recog/max_mins/class2', np.array(class2))
 np.save('/home/admin/rnn&lstm_gesture_recog/max_mins/class3', np.array(class3))
 np.save('/home/admin/rnn&lstm_gesture_recog/max_mins/class4', np.array(class4))
 
 np.save('/home/admin/rnn&lstm_gesture_recog/max_mins/overall_class', np.array(overall_class))
-
+'''

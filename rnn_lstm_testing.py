@@ -145,7 +145,7 @@ with tf.Session() as sess:
         prediction_vector = sess.run(test_pred, feed_dict={x: batch_x, y: batch_y})
         ###### Calculate the max of the pred vector
         print ("Prediction Vector---", prediction_vector)
-        maximum = np.amax(prediction_vector, axis=1)
+        maximum = np.amin(prediction_vector, axis=1)
         print maximum
         list_max.append(maximum)
         
@@ -163,7 +163,7 @@ with tf.Session() as sess:
 
     print ('Final accuracy = ', ((float(accuracy_counter))/(float(n_test)) *float(100))   , '%'    )
 
-#print np.array(list_max)
+
 print (float(len(list_max)))
 
 print (sum(list_max[0:30]) / 30)
@@ -173,32 +173,67 @@ print (sum(list_max[90:120]) / 30)
 
 print (sum(list_max) /float(len(list_max)))
 
-'''
-if os.path.exists('/home/admin/rnn&lstm_gesture_recog/max_mins/class1.npy')==True:
-    class1 = list(np.load('/home/admin/rnn&lstm_gesture_recog/max_mins/class1.npy'))
+#### Standard Deviation calculation for each class over the maximums and minimums over each time step.
+#### SD = [40]  Dimension
+s1 = np.std(np.array(list_max[0:30]))
+s2 = np.std(np.array(list_max[30:60]))
+s3 = np.std(np.array(list_max[60:90]))
+s4 = np.std(np.array(list_max[90:120]))
+o = np.std(np.array(list_max))
+
+##### opening the arrays for each classes---- max or min
+if os.path.exists('/home/admin/rnn&lstm_gesture_recog/max_mins/mins/class1.npy')==True:
+    class1 = list(np.load('/home/admin/rnn&lstm_gesture_recog/max_mins/mins/class1.npy'))
 else:
     class1 = []
 
-if os.path.exists('/home/admin/rnn&lstm_gesture_recog/max_mins/class2.npy')==True:
-    class2 = list(np.load('/home/admin/rnn&lstm_gesture_recog/max_mins/class2.npy'))
+if os.path.exists('/home/admin/rnn&lstm_gesture_recog/max_mins/mins/class2.npy')==True:
+    class2 = list(np.load('/home/admin/rnn&lstm_gesture_recog/max_mins/mins/class2.npy'))
 else:
     class2 = []
     
-if os.path.exists('/home/admin/rnn&lstm_gesture_recog/max_mins/class3.npy')==True:
-    class3 = list(np.load('/home/admin/rnn&lstm_gesture_recog/max_mins/class3.npy'))
+if os.path.exists('/home/admin/rnn&lstm_gesture_recog/max_mins/mins/class3.npy')==True:
+    class3 = list(np.load('/home/admin/rnn&lstm_gesture_recog/max_mins/mins/class3.npy'))
 else:
     class3 = []
     
-if os.path.exists('/home/admin/rnn&lstm_gesture_recog/max_mins/class4.npy')==True:
-    class4 = list(np.load('/home/admin/rnn&lstm_gesture_recog/max_mins/class4.npy'))
+if os.path.exists('/home/admin/rnn&lstm_gesture_recog/max_mins/mins/class4.npy')==True:
+    class4 = list(np.load('/home/admin/rnn&lstm_gesture_recog/max_mins/mins/class4.npy'))
 else:
     class4 = []
     
-if os.path.exists('/home/admin/rnn&lstm_gesture_recog/max_mins/overall_class.npy')==True:
-    overall_class = list(np.load('/home/admin/rnn&lstm_gesture_recog/max_mins/overall_class.npy'))
+if os.path.exists('/home/admin/rnn&lstm_gesture_recog/max_mins/mins/overall_class.npy')==True:
+    overall_class = list(np.load('/home/admin/rnn&lstm_gesture_recog/max_mins/mins/overall_class.npy'))
 else:
     overall_class = []
 
+### SDs
+if os.path.exists('/home/admin/rnn&lstm_gesture_recog/max_mins/mins/sd1.npy')==True:
+    sd1 = list(np.load('/home/admin/rnn&lstm_gesture_recog/max_mins/mins/sd1.npy'))
+else:
+    sd1 = []
+    
+if os.path.exists('/home/admin/rnn&lstm_gesture_recog/max_mins/mins/sd2.npy')==True:
+    sd2 = list(np.load('/home/admin/rnn&lstm_gesture_recog/max_mins/mins/sd2.npy'))
+else:
+    sd2 = []
+
+if os.path.exists('/home/admin/rnn&lstm_gesture_recog/max_mins/mins/sd3.npy')==True:
+    sd3 = list(np.load('/home/admin/rnn&lstm_gesture_recog/max_mins/mins/sd3.npy'))
+else:
+    sd3 = []
+
+if os.path.exists('/home/admin/rnn&lstm_gesture_recog/max_mins/mins/sd4.npy')==True:
+    sd4 = list(np.load('/home/admin/rnn&lstm_gesture_recog/max_mins/mins/sd4.npy'))
+else:
+    sd4 = []
+
+if os.path.exists('/home/admin/rnn&lstm_gesture_recog/max_mins/mins/sd_o.npy')==True:
+    sd_o = list(np.load('/home/admin/rnn&lstm_gesture_recog/max_mins/mins/sd_o.npy'))
+else:
+    sd_o = []
+
+### Appending max or min to the arrays over time steps
 class1.append(sum(list_max[0:30]) / 30)
 class2.append(sum(list_max[30:60]) / 30)
 class3.append(sum(list_max[60:90]) / 30)
@@ -206,11 +241,25 @@ class4.append(sum(list_max[90:120]) / 30)
 
 overall_class.append(sum(list_max) /float(len(list_max)))
 
+###SDs appending
+sd1.append(s1)
+sd2.append(s2)
+sd3.append(s3)
+sd4.append(s4)
+sd_o.append(o)
 
-np.save('/home/admin/rnn&lstm_gesture_recog/max_mins/class1', np.array(class1))
-np.save('/home/admin/rnn&lstm_gesture_recog/max_mins/class2', np.array(class2))
-np.save('/home/admin/rnn&lstm_gesture_recog/max_mins/class3', np.array(class3))
-np.save('/home/admin/rnn&lstm_gesture_recog/max_mins/class4', np.array(class4))
+### Saving the max or min arrays
+np.save('/home/admin/rnn&lstm_gesture_recog/max_mins/mins/class1', np.array(class1))
+np.save('/home/admin/rnn&lstm_gesture_recog/max_mins/mins/class2', np.array(class2))
+np.save('/home/admin/rnn&lstm_gesture_recog/max_mins/mins/class3', np.array(class3))
+np.save('/home/admin/rnn&lstm_gesture_recog/max_mins/mins/class4', np.array(class4))
 
-np.save('/home/admin/rnn&lstm_gesture_recog/max_mins/overall_class', np.array(overall_class))
-'''
+np.save('/home/admin/rnn&lstm_gesture_recog/max_mins/mins/overall_class', np.array(overall_class))
+
+### Saving the SDs for each class
+np.save('/home/admin/rnn&lstm_gesture_recog/max_mins/mins/sd1', np.array(sd1))
+np.save('/home/admin/rnn&lstm_gesture_recog/max_mins/mins/sd2', np.array(sd2))
+np.save('/home/admin/rnn&lstm_gesture_recog/max_mins/mins/sd3', np.array(sd3))
+np.save('/home/admin/rnn&lstm_gesture_recog/max_mins/mins/sd4', np.array(sd4))
+
+np.save('/home/admin/rnn&lstm_gesture_recog/max_mins/mins/sd_o', np.array(sd_o))

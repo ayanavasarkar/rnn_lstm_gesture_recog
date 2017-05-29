@@ -77,5 +77,5 @@ plt.legend([ p5], [ "MINIMUM for all Classes"], loc='upper left', fontsize = 24,
 #plt.legend([ p1, p2, p3, p4], [ "MAXIMUM for Class =1","MAXIMUM for Class =2", "MAXIMUM for Class =3",
 #           "MAXIMUM for Class =4"], loc='upper left', fontsize = 24, borderaxespad=0.)	#
 plt.show()
-fig.savefig('plot_average_min_with_sd_o.png')
+fig.savefig('plot_average_min_with_sd_all.png')
 

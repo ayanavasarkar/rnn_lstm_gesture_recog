@@ -28,8 +28,8 @@ if os.path.exists('/home/admin/rnn&lstm_gesture_recog/max_mins/mins/class1.npy')
 if os.path.exists('/home/admin/rnn&lstm_gesture_recog/max_mins/mins/class2.npy')==True:
     class2 = (np.load('/home/admin/rnn&lstm_gesture_recog/max_mins/mins/class2.npy'))
 
-if os.path.exists('/home/admin/rnn&lstm_gesture_recog/max_mins/mins/class3.npy')==True:
-    class3 = (np.load('/home/admin/rnn&lstm_gesture_recog/max_mins/mins/class3.npy'))
+if os.path.exists('/home/admin/rnn&lstm_gesture_recog/max_mins/maxs/class3.npy')==True:
+    class3 = (np.load('/home/admin/rnn&lstm_gesture_recog/max_mins/maxs/class3.npy'))
 
 if os.path.exists('/home/admin/rnn&lstm_gesture_recog/max_mins/mins/class4.npy')==True:
     class4 = (np.load('/home/admin/rnn&lstm_gesture_recog/max_mins/mins/class4.npy'))
@@ -43,8 +43,8 @@ if os.path.exists('/home/admin/rnn&lstm_gesture_recog/max_mins/mins/sd1.npy')==T
 if os.path.exists('/home/admin/rnn&lstm_gesture_recog/max_mins/mins/sd2.npy')==True:
     sd2 = list(np.load('/home/admin/rnn&lstm_gesture_recog/max_mins/mins/sd2.npy'))
 
-if os.path.exists('/home/admin/rnn&lstm_gesture_recog/max_mins/mins/sd3.npy')==True:
-    sd3 = list(np.load('/home/admin/rnn&lstm_gesture_recog/max_mins/mins/sd3.npy'))
+if os.path.exists('/home/admin/rnn&lstm_gesture_recog/max_mins/maxs/sd3.npy')==True:
+    sd3 = list(np.load('/home/admin/rnn&lstm_gesture_recog/max_mins/maxs/sd3.npy'))
 
 if os.path.exists('/home/admin/rnn&lstm_gesture_recog/max_mins/mins/sd4.npy')==True:
     sd4 = list(np.load('/home/admin/rnn&lstm_gesture_recog/max_mins/mins/sd4.npy'))
@@ -59,23 +59,23 @@ axis_font = {'fontname':'Arial', 'size':'35'}
 #plt.errorbar(x, y, e, linestyle='None', marker='^')
 #p1 =plt.errorbar( time_step,  class1, sd1, label="MINIMUM for Class =1", linewidth=5, marker='o', markeredgewidth= '5', markerfacecolor='black', color='b')
 #p2 =plt.errorbar( time_step,  class2, sd2, label="MAXIMUM for Class =2", linewidth=5, marker='o', markeredgewidth= '5', markerfacecolor='black', color='r')
-#p3 =plt.errorbar( time_step,  class3, sd3, label="MAXIMUM for Class =3", linewidth=5, marker='o', markeredgewidth= '5', markerfacecolor='black', color='g')
+p3 =plt.errorbar( time_step,  class3, sd3, label="MAXIMUM for Class =3", linewidth=5, marker='o', markeredgewidth= '5', markerfacecolor='black', color='g')
 #p4 =plt.errorbar( time_step,  class4, sd4,  label="MAXIMUM for Class =4", linewidth=5, marker='o', markeredgewidth= '5', markerfacecolor='black', color='y')
-p5 =plt.errorbar( time_step, overall_class, sd_o, label="MAXIMUM for all classes overall", linewidth=5, marker='o', markeredgewidth= '5', markerfacecolor='black', color='purple')
+#p5 =plt.errorbar( time_step, overall_class, sd_o, label="MAXIMUM for all classes overall", linewidth=5, marker='o', markeredgewidth= '5', markerfacecolor='black', color='purple')
 
 plt.grid()
 plt.xlim([-45,0])
-plt.ylim([-50,5])
-plt.ylabel('Minimums of the prediction arrays', **axis_font)
+plt.ylim([0,50])
+plt.ylabel('Maximums of the prediction arrays', **axis_font)
 plt.xlabel('timesteps from 0 to 39', **axis_font)
 
 ax.xaxis.set_major_locator(ticker.MultipleLocator(1))
 ax.yaxis.set_major_locator(ticker.MultipleLocator(1))
 
-plt.legend([ p5], [ "MINIMUM for all Classes"], loc='upper left', fontsize = 24, borderaxespad=0.)
+plt.legend([ p3], [ "MAXIMUM for Class = 3"], loc='upper left', fontsize = 24, borderaxespad=0.)
 
 #plt.legend([ p1, p2, p3, p4], [ "MAXIMUM for Class =1","MAXIMUM for Class =2", "MAXIMUM for Class =3",
 #           "MAXIMUM for Class =4"], loc='upper left', fontsize = 24, borderaxespad=0.)	#
 plt.show()
-fig.savefig('plot_average_min_with_sd_all.png')
+fig.savefig('plot_average_max_with_sd3.png')
 

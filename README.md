@@ -14,3 +14,12 @@ These 4 files can be copied for other implementations.
 
 
 Link to the Research Paper --- https://link.springer.com/content/pdf/10.1007%2F978-3-319-72038-8_3.pdf
+
+Please cite the following paper:
+
+Dynamic Hand Gesture Recognition for Mobile Systems Using Deep LSTM
+(Link for Paper -- https://link.springer.com/content/pdf/10.1007%2F978-3-319-72038-8_3.pdf)
+
+Citation ---
+
+Sarkar, A., Gepperth, A., Handmann, U., & Kopinski, T. (2017, December). Dynamic Hand Gesture Recognition for Mobile Systems Using Deep LSTM. In International Conference on Intelligent Human Computer Interaction (pp. 19-31). Springer, Cham.

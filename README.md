@@ -6,4 +6,8 @@ These 4 files can be copied for other implementations.
 
 1) rnn_lstm_optimized.py --- This python script is the optimized implementation. It trains the model on the data and then tests the accuracy and records it.
 
-2) rnn_lstm_train.py --- This python script file is for training the model on the data and then string the model and the graph in the folder Trained_model.
+2) rnn_lstm_train.py --- This python script file is for training the model on the data and then string the model and the graph in the folder trained_model.
+
+3) rnn_lstm_test.py --- This python script file is for testing the accuracy of the saved trained model.
+
+4) rnn_lstm_testing.py --- It calculates and depicts the accuracy of prediction of the model across the 4 classes of gestures. It also represents the standard deviation for each class during prediction.

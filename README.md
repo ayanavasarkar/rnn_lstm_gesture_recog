@@ -11,3 +11,6 @@ These 4 files can be copied for other implementations.
 3) rnn_lstm_test.py --- This python script file is for testing the accuracy of the saved trained model.
 
 4) rnn_lstm_testing.py --- It calculates and depicts the accuracy of prediction of the model across the 4 classes of gestures. It also represents the standard deviation for each class during prediction.
+
+
+Link to the Research Paper --- https://link.springer.com/content/pdf/10.1007%2F978-3-319-72038-8_3.pdf

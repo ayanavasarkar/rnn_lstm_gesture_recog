@@ -12,6 +12,7 @@ import numpy as np
 data=[]
 arr=np.zeros((30*4,40,625))
 
+##Absolute path
 path='/home/admin/rnn&lstm_gesture_recog/new_data/'
 f_n=1
 

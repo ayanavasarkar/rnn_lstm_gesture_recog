@@ -51,4 +51,5 @@ ax.yaxis.set_tick_params(labelsize=35)
 
 plt.legend([p1, p2], ["B=2, M=1, C=8", "B=2, M=1, C=10"], loc='lower right', fontsize = 40, borderaxespad=0.)	#
 plt.show()
+#save the figure
 #fig.savefig('plot_small_neurons.png')
